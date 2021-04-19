@@ -1,5 +1,6 @@
 const path = require('path');
-const fs = require('fs');
+const webpack = require('webpack');
+const WebpackChunkHash = require('webpack-chunk-hash');
 const isDev = process.env.NODE_ENV !== 'production';
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -47,24 +48,8 @@ const config = {
       filename: isDev ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
     }),
-    function (compiler) {
-      compiler.hooks.done.tap('Reactful', (stats) => {
-        let gVars = {};
-        try {
-          gVars = require('./.reactful.json');
-        } catch (err) {
-          // do nothing
-        }
-        fs.writeFileSync(
-          path.resolve('.reactful.json'),
-          JSON.stringify(
-            Object.assign({}, gVars, stats.toJson()['assetsByChunkName']),
-            null,
-            2,
-          ),
-        );
-      });
-    },
+    new webpack.HashedModuleIdsPlugin(),
+    new WebpackChunkHash(),
   ],
 };
 

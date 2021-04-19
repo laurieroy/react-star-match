@@ -6,6 +6,6 @@ import { App } from 'components/App';
 import '../styles/index.css';
 
 ReactDOM.hydrate(
-  <App initialData={window.__R_DATA.initialData} />,
+  <App />,
   document.getElementById('root'),
 );
